@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Territory Conquest</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Main Menu -->
+    <div id="mainMenu" class="screen">
+        <div class="menu-container">
+            <h1>Territory Conquest</h1>
+            <div class="menu-buttons">
+                <input type="text" id="playerNameInput" placeholder="Enter your name" maxlength="20" value="Player">
+                <button id="createLobbyBtn" class="btn btn-primary">Create Game</button>
+                <div class="join-section">
+                    <input type="text" id="lobbyIdInput" placeholder="Lobby ID" maxlength="10">
+                    <button id="joinLobbyBtn" class="btn btn-secondary">Join Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lobby Screen -->
+    <div id="lobbyScreen" class="screen hidden">
+        <div class="lobby-container">
+            <h2>Game Lobby</h2>
+            <div class="lobby-info">
+                <p>Lobby ID: <span id="lobbyId" class="lobby-id-text"></span></p>
+                <button id="copyLobbyIdBtn" class="btn btn-small">Copy ID</button>
+            </div>
+
+            <div class="players-list">
+                <h3>Players (<span id="playerCount">0</span>/8)</h3>
+                <ul id="playersList"></ul>
+            </div>
+
+            <div class="lobby-controls">
+                <button id="addBotBtn" class="btn btn-secondary">Add Bot</button>
+                <button id="toggleReadyBtn" class="btn btn-secondary">Ready</button>
+                <button id="startGameBtn" class="btn btn-primary">Start Game</button>
+                <button id="leaveLobbyBtn" class="btn btn-danger">Leave</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen hidden">
+        <!-- HUD -->
+        <div id="gameHUD">
+            <div class="hud-section hud-left">
+                <div class="turn-info">
+                    <span id="currentPlayerName">Player 1</span>'s Turn
+                </div>
+                <div class="turn-timer">
+                    Time: <span id="turnTimer">45</span>s
+                </div>
+            </div>
+
+            <div class="hud-section hud-center">
+                <button id="endTurnBtn" class="btn btn-primary">End Turn</button>
+            </div>
+
+            <div class="hud-section hud-right">
+                <div class="player-stats">
+                    <div>Territories: <span id="playerTerritories">0</span></div>
+                    <div>Total Troops: <span id="playerTroops">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Canvas -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Players Panel -->
+        <div id="playersPanel">
+            <h3>Players</h3>
+            <ul id="gamePlayersList"></ul>
+        </div>
+
+        <!-- Selection Info -->
+        <div id="selectionInfo" class="hidden">
+            <h4>Selected Territory</h4>
+            <p>Troops: <span id="selectedTroops">0</span></p>
+            <p>Owner: <span id="selectedOwner">None</span></p>
+        </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="screen hidden">
+        <div class="game-over-container">
+            <h1 id="gameOverTitle">Game Over!</h1>
+            <div class="winner-info">
+                <h2 id="winnerName"></h2>
+                <p id="winnerStats"></p>
+            </div>
+            <div class="game-stats">
+                <h3>Final Standings</h3>
+                <ul id="finalStandingsList"></ul>
+            </div>
+            <button id="backToMenuBtn" class="btn btn-primary">Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Error Toast -->
+    <div id="errorToast" class="toast hidden"></div>
+
+    <!-- Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Shared Game Logic -->
+    <script src="/shared/Territory.js"></script>
+    <script src="/shared/MapGenerator.js"></script>
+    <script src="/shared/GameState.js"></script>
+    <script src="/shared/AIBot.js"></script>
+
+    <!-- Client-side Scripts -->
+    <script src="js/renderer.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
