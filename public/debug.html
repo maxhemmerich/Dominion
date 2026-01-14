@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Main Menu Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .log {
+            background: #1a1a1a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+            min-height: 100px;
+        }
+        .success { color: #2ecc71; }
+        .error { color: #e74c3c; }
+        .info { color: #3498db; }
+    </style>
+</head>
+<body>
+    <h1>🐛 Main Menu Debug Test</h1>
+
+    <p>This tests the exact same buttons as the main menu to identify the issue.</p>
+
+    <h2>Test 1: Simple Click Test</h2>
+    <button id="simpleBtn">Click Me - Simple Test</button>
+    <div id="simpleLog" class="log">Waiting for click...</div>
+
+    <h2>Test 2: Socket.io Test (Same as Create Lobby)</h2>
+    <input type="text" id="testNameInput" placeholder="Enter your name" value="TestPlayer" style="padding: 10px; font-size: 16px;">
+    <button id="testCreateBtn">Test Create Lobby</button>
+    <div id="socketLog" class="log">Waiting for action...</div>
+
+    <h2>Test 3: Check Main Game Page</h2>
+    <button onclick="window.location.href='/'">Go to Main Game</button>
+    <p style="color: #f39c12;">Use browser console (F12) to see if there are any errors on the main page.</p>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Test 1: Simple click
+        const simpleBtn = document.getElementById('simpleBtn');
+        const simpleLog = document.getElementById('simpleLog');
+
+        let clickCount = 0;
+        simpleBtn.addEventListener('click', () => {
+            clickCount++;
+            simpleLog.innerHTML = `<span class="success">✓ Click works! Clicked ${clickCount} time(s)</span>`;
+        });
+
+        // Test 2: Socket.io connection (mimics Create Lobby)
+        const testCreateBtn = document.getElementById('testCreateBtn');
+        const socketLog = document.getElementById('socketLog');
+
+        let socket = null;
+
+        testCreateBtn.addEventListener('click', () => {
+            socketLog.innerHTML = '<span class="info">Connecting to Socket.io server...</span>';
+
+            if (!socket) {
+                socket = io();
+
+                socket.on('connect', () => {
+                    socketLog.innerHTML += '<br><span class="success">✓ Connected! Socket ID: ' + socket.id + '</span>';
+
+                    // Test creating a lobby
+                    const playerName = document.getElementById('testNameInput').value || 'TestPlayer';
+                    socketLog.innerHTML += '<br><span class="info">Sending createLobby request with name: ' + playerName + '</span>';
+
+                    socket.emit('createLobby', { playerName });
+                });
+
+                socket.on('lobbyCreated', (lobby) => {
+                    socketLog.innerHTML += '<br><span class="success">✓ Lobby created successfully!</span>';
+                    socketLog.innerHTML += '<br>Lobby ID: <strong>' + lobby.id + '</strong>';
+                    socketLog.innerHTML += '<br>Players: ' + JSON.stringify(lobby.players);
+                });
+
+                socket.on('connect_error', (error) => {
+                    socketLog.innerHTML += '<br><span class="error">✗ Connection error: ' + error.message + '</span>';
+                });
+
+                socket.on('error', (data) => {
+                    socketLog.innerHTML += '<br><span class="error">✗ Server error: ' + data.message + '</span>';
+                });
+            } else {
+                // Socket already connected, just create lobby
+                const playerName = document.getElementById('testNameInput').value || 'TestPlayer';
+                socketLog.innerHTML += '<br><span class="info">Sending createLobby request with name: ' + playerName + '</span>';
+                socket.emit('createLobby', { playerName });
+            }
+        });
+
+        // Log page load
+        console.log('Debug page loaded successfully');
+        console.log('Socket.io available:', typeof io !== 'undefined');
+    </script>
+</body>
+</html>
