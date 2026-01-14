@@ -23,10 +23,18 @@ body {
     justify-content: center;
     align-items: center;
     transition: opacity 0.3s;
+    z-index: 100;
 }
 
 .screen.hidden {
-    display: none;
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Game screen should be below HUD and panels */
+#gameScreen {
+    z-index: 1;
 }
 
 /* Buttons */
