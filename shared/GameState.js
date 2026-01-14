@@ -2,8 +2,13 @@
  * GameState - Core game logic and state management
  */
 
-const Territory = typeof require !== 'undefined' ? require('./Territory.js') : window.Territory;
-const MapGenerator = typeof require !== 'undefined' ? require('./MapGenerator.js') : window.MapGenerator;
+// Import dependencies (Node.js only - browser uses global)
+if (typeof require !== 'undefined' && typeof Territory === 'undefined') {
+  var Territory = require('./Territory.js');
+}
+if (typeof require !== 'undefined' && typeof MapGenerator === 'undefined') {
+  var MapGenerator = require('./MapGenerator.js');
+}
 
 class GameState {
   constructor(config = {}) {

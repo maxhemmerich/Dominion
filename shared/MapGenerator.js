@@ -3,8 +3,10 @@
  * Uses a simplified Voronoi-like approach for territory generation
  */
 
-// Import Territory class
-const Territory = typeof require !== 'undefined' ? require('./Territory.js') : window.Territory;
+// Import Territory class (Node.js only - browser uses global)
+if (typeof require !== 'undefined' && typeof Territory === 'undefined') {
+  var Territory = require('./Territory.js');
+}
 
 class MapGenerator {
   /**
