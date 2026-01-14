@@ -13,15 +13,23 @@ class UIManager {
    * Show a specific screen
    */
   showScreen(screenName) {
+    console.log(`[UI] Switching to screen: ${screenName}`);
+
     // Hide all screens
     const screens = document.querySelectorAll('.screen');
-    screens.forEach(screen => screen.classList.add('hidden'));
+    screens.forEach(screen => {
+      screen.classList.add('hidden');
+      console.log(`[UI] Hiding screen: ${screen.id}`);
+    });
 
     // Show target screen
     const targetScreen = document.getElementById(screenName);
     if (targetScreen) {
       targetScreen.classList.remove('hidden');
       this.currentScreen = screenName;
+      console.log(`[UI] Showing screen: ${screenName}`);
+    } else {
+      console.error(`[UI] Screen not found: ${screenName}`);
     }
   }
 
